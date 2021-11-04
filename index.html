@@ -231,20 +231,28 @@
             <div class="row justify-content-center">
                 <div class="col-md-5 col-sm-10 col-12 wow fadeInUp" data-wow-duration="5s">
                     <h1 class="text-center">INFO</h1>
-                    <form action="kirim.php" method="post">
+                    <div class="alert alert-success alert-dismissible fade show d-none my-alert" role="alert">
+                      <strong>Terimakasih!!</strong> Pesan anda sudah kami terima.
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <form name="MacAla-Contact-Forms">
                         <div class="mb-3">
                             <label for="namaLengkap"><span class="text-danger">*</span>Nama Lengkap</label>
-                            <input type="text" class="form-control py-3" placeholder="Masukkan Nama Anda" name="Nama Lengkap">
+                            <input type="text" class="form-control py-3" placeholder="Masukkan Nama Anda" name="nama">
                           </div>
                         <div class="mb-3">
                           <label for="email"><span class="text-danger">*</span>Email address</label>
-                          <input type="email" class="form-control py-3" placeholder="Masukkan Email Anda" name="Email address">
+                          <input type="email" class="form-control py-3" placeholder="Masukkan Email Anda" name="email">
                         </div>
                         <div class="mb-3">
                             <label for="pesan">Pesan</label>
-                            <textarea class="form-control" rows="5" placeholder="Masukkan Pesan" name="Pesan"></textarea>
+                            <textarea class="form-control" rows="5" placeholder="Masukkan Pesan" name="pesan"></textarea>
                           </div> 
-                        <button type="submit" class="btn btn-primary" name="kirim">Kirim</button>
+                        <button type="submit" class="btn btn-primary btn-kirim">Kirim</button>
+                        <button class="btn btn-primary btn-loading d-none" type="button" disabled>
+                          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                          Loading...
+                        </button>
                     </form>
                 </div>
             </div>
@@ -263,14 +271,32 @@
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
-    <!-- Option 2: Separate Popper and Bootstrap JS -->
-    <!--
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
-    -->
-    <script src="js/wow.min.js"></script>
     <script>
-       new WOW().init();
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbx4OdOV3ErP0_qX0JRGe2Mmt8kdV6uANYFtYPgJ-_4l0UBnhx5ukv4OLwFQZDogcR82gA/exec'
+      const form = document.forms['MacAla-Contact-Forms']
+      const btnKirim = document.querySelector('.btn-kirim')
+      const btnLoading = document.querySelector('.btn-loading')
+      const myAlert = document.querySelector('.my-alert')
+
+      form.addEventListener('submit', e => {
+        e.preventDefault()
+        //menampilkan tombol loading hilangkan kirim
+        btnLoading.classList.toggle('d-none')
+        btnKirim.classList.toggle('d-none')
+        myAlert.classList.toggle('d-none')
+
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+          .then(response => {
+            //menampilkan tombol kirim hilangkan loading
+            btnLoading.classList.toggle('d-none')
+            btnKirim.classList.toggle('d-none')
+            myAlert.classList.toggle('d-none')
+            // reset form
+            form.reset()
+            console.log('Success!', response)
+          })
+          .catch(error => console.error('Error!', error.message))
+      })
     </script>
   </body>
 </html>
